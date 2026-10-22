@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>保固與說明書管家</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2f4;--surface:#fff;--ink:#1b2a33;--mute:#5d6e78;--line:#d3dce1;--accent:#0f6b6b;--accent-ink:#fff;--soon:#b87400;--soon-bg:#fbf0d9;--gone:#a63a34;--gone-bg:#f8e3e1;--ok-bg:#dff0ee;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10181d;--surface:#192329;--ink:#e6eef1;--mute:#93a5ae;--line:#2c3a42;--accent:#4fc0b8;--accent-ink:#0b1417;--soon:#e8b04a;--soon-bg:#3a2e14;--gone:#ef8b84;--gone-bg:#3b1d1b;--ok-bg:#16322f}}
+:root[data-theme="dark"]{--bg:#10181d;--surface:#192329;--ink:#e6eef1;--mute:#93a5ae;--line:#2c3a42;--accent:#4fc0b8;--accent-ink:#0b1417;--soon:#e8b04a;--soon-bg:#3a2e14;--gone:#ef8b84;--gone-bg:#3b1d1b;--ok-bg:#16322f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:20px 16px 90px}
+h1{font-size:26px;margin:8px 0 2px;font-weight:700;letter-spacing:.02em}
+.sub{color:var(--mute);margin:0 0 18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.stat b{display:block;font-size:24px;line-height:1.2}
+.stat span{color:var(--mute);font-size:13px}
+.stat[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.tools{display:flex;gap:8px;margin-bottom:14px}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:9px 16px;font-weight:500}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:transparent;color:var(--gone);border:1px solid var(--gone)}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:10px;border-left:5px solid var(--accent)}
+.item.soon{border-left-color:var(--soon)}.item.gone{border-left-color:var(--gone)}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.name{font-weight:700;font-size:17px;margin:0}
+.meta{color:var(--mute);font-size:14px;margin:2px 0 0}
+.tag{font-size:13px;font-weight:500;padding:2px 10px;border-radius:99px;background:var(--ok-bg);color:var(--accent);white-space:nowrap}
+.soon .tag{background:var(--soon-bg);color:var(--soon)}.gone .tag{background:var(--gone-bg);color:var(--gone)}
+.bar{height:6px;background:var(--line);border-radius:3px;margin:10px 0 8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}.soon .bar i{background:var(--soon)}.gone .bar i{background:var(--gone)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.acts a,.acts button{font-size:14px;padding:5px 12px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink);text-decoration:none}
+.note{font-size:14px;color:var(--mute);margin:6px 0 0;white-space:pre-wrap}
+.empty{text-align:center;color:var(--mute);padding:40px 10px;border:1px dashed var(--line);border-radius:10px}
+.fab{position:fixed;right:max(16px,calc(50% - 344px));bottom:calc(18px + env(safe-area-inset-bottom,0px));border-radius:99px;padding:13px 22px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);width:min(520px,calc(100% - 24px));padding:20px;max-height:92vh}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+label{display:block;font-size:14px;font-weight:500;margin:12px 0 4px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.foot{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.data{display:flex;gap:8px;margin-top:26px;flex-wrap:wrap}
+.sync{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:-8px 0 14px;font-size:14px}
+.sync a{color:var(--accent)}.bad{color:var(--gone)}
+.files{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+.chip{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:13px;padding:3px 10px;border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--ink);max-width:100%;overflow-wrap:anywhere}
+.chip em{font-style:normal;color:var(--accent);font-weight:700}
+.chip .x{border:0;background:none;color:var(--gone);padding:0 0 0 2px;font-size:16px;line-height:1}
+.up{display:flex;gap:8px}
+.kv{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin:8px 0 0}
+.kv a{color:var(--accent)}
+#vwb img{max-width:100%;display:block;margin:12px auto;border-radius:8px}
+@media (max-width:420px){.g2{grid-template-columns:1fr}}
+#cd ol{padding-left:20px;margin:10px 0}#gs{font:12px/1.4 ui-monospace,Menlo,monospace}#cd summary{cursor:pointer;margin:6px 0}
+</style>
+</head>
+<body>
+<main>
+  <h1>保固與說明書管家</h1>
+  <p class="sub">記下每件家電與 3C 的保固期限，資料同步到你的 Google 試算表。</p>
+  <div class="sync" id="sync"></div>
+  <div class="stats" id="stats"></div>
+  <div class="tools">
+    <input id="q" type="search" placeholder="搜尋名稱、品牌、店家" aria-label="搜尋">
+    <select id="cat" aria-label="分類" style="max-width:130px"></select>
+  </div>
+  <div id="list"></div>
+  <div class="data">
+    <button class="btn ghost" id="exp">匯出備份</button>
+    <button class="btn ghost" id="imp">匯入備份</button>
+    <input type="file" id="file" accept="application/json" hidden>
+  </div>
+</main>
+<button class="btn fab" id="add">＋ 新增產品</button>
+
+<dialog id="dlg">
+  <div id="fm">
+    <h2 id="dt" style="margin:0;font-size:20px">新增產品</h2>
+    <label for="f-name">產品名稱</label><input id="f-name" placeholder="例如：Dyson 吸塵器">
+    <div class="g2">
+      <div><label for="f-brand">品牌／型號</label><input id="f-brand"></div>
+      <div><label for="f-catg">分類</label><select id="f-catg"></select></div>
+    </div>
+    <div class="g2">
+      <div><label for="f-date">購買日期</label><input id="f-date" type="date"></div>
+      <div><label for="f-mon">保固月數</label><input id="f-mon" type="number" min="1" value="12"></div>
+    </div>
+    <div class="g2">
+      <div><label for="f-store">購買店家</label><input id="f-store"></div>
+      <div><label for="f-price">金額 (NT$)</label><input id="f-price" type="number" min="0"></div>
+    </div>
+    <div class="g2"><div><label for="f-serial">產品序號</label><input id="f-serial"></div><div><label for="f-phone">客服電話</label><input id="f-phone" type="tel"></div></div>
+    <label for="f-url">說明書連結（選填）</label><input id="f-url" type="url" placeholder="https://">
+    <label for="f-kind">附件（發票、保固書、說明書，儲存在 Google Drive）</label>
+    <div class="up"><select id="f-kind" style="max-width:110px"><option>發票</option><option>保固書</option><option>說明書</option><option>其他</option></select><button type="button" class="btn ghost" id="pick">選擇圖片或 PDF</button><input type="file" id="fpick" accept="image/*,application/pdf" multiple hidden></div>
+    <div class="files" id="flist"></div>
+    <label for="f-note">備註</label><textarea id="f-note" rows="3"></textarea>
+    <p id="err" style="color:var(--gone);margin:8px 0 0;min-height:1.4em" role="alert"></p>
+    <div class="foot">
+      <button class="btn danger" id="del" hidden>刪除</button>
+      <button class="btn ghost" id="cancel">取消</button>
+      <button class="btn" id="save">儲存產品</button>
+    </div>
+  </div>
+</dialog>
+<dialog id="vw"><div id="vwb"></div><div class="foot"><button class="btn ghost" id="vdl">下載</button><button class="btn" id="vcl">關閉</button></div></dialog>
+
+<dialog id="cd">
+  <h2 style="margin:0;font-size:20px">連線到 Google 試算表</h2>
+  <ol>
+    <li>開啟你的 Google 試算表，工作表命名為 <b>Items</b>（沒有的話程式會自動建立）。</li>
+    <li>選單「擴充功能 → Apps Script」，貼上下方程式碼，把 <b>TOKEN</b> 改成你自己的密碼，按儲存。</li>
+    <li>按「部署 → 新增部署作業 → 網頁應用程式」，執行身分選「我」，存取權選「任何人」，部署後完成授權（會要求 Google 雲端硬碟權限，用來存放附件）。</li>
+    <li>複製「網頁應用程式網址」貼到下方，並輸入同一組密碼。</li>
+  </ol>
+  <details><summary>Apps Script 程式碼</summary>
+    <textarea id="gs" readonly rows="9" aria-label="Apps Script 程式碼"></textarea>
+    <button class="btn ghost" id="gcopy" type="button" style="margin-top:6px">複製程式碼</button>
+  </details>
+  <label for="c-url">網頁應用程式網址</label><input id="c-url" placeholder="https://script.google.com/macros/s/…/exec">
+  <label for="c-tok">密碼（同 Apps Script 中的 TOKEN）</label><input id="c-tok" type="password" autocomplete="off">
+  <p id="cerr" style="color:var(--gone);margin:8px 0 0;min-height:1.4em" role="alert"></p>
+  <div class="foot"><button class="btn ghost" id="ccl">取消</button><button class="btn" id="csv">儲存並連線</button></div>
+</dialog>
+<script type="text/plain" id="gs-src">// 保固與說明書管家：貼到試算表的「擴充功能 → Apps Script」
+const TOKEN = '請改成你自己的密碼';
+const TAB = 'Items';
+const FOLDER_NAME = '保固與說明書管家附件';
+const COLS = ['id','name','brand','cat','date','months','store','price','url','serial','phone','note','files'];
+const TEXT_COLS = [1,2,3,4,5,7,9,10,11,12,13];
+
+function doGet() { return ContentService.createTextOutput('OK'); }
+function doPost(e) {
+  let out;
+  try { out = run_(JSON.parse(e.postData.contents)); }
+  catch (err) { out = { ok: false, error: String(err) }; }
+  return ContentService.createTextOutput(JSON.stringify(out)).setMimeType(ContentService.MimeType.JSON);
+}
+function sheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName(TAB);
+  if (!sh) { sh = ss.insertSheet(TAB); sh.appendRow(COLS); sh.setFrozenRows(1); }
+  if (sh.getRange(1, 13).getValue() !== 'files') sh.getRange(1, 13).setValue('files').setFontWeight('bold');
+  const props = PropertiesService.getScriptProperties();
+  if (!props.getProperty('fmt2')) {
+    if (sh.getMaxRows() < 2) sh.insertRowsAfter(1, 100);
+    TEXT_COLS.forEach(c => sh.getRange(2, c, sh.getMaxRows() - 1, 1).setNumberFormat('@'));
+    props.setProperty('fmt2', '1');
+  }
+  return sh;
+}
+function folder_() {
+  const props = PropertiesService.getScriptProperties();
+  const id = props.getProperty('folderId');
+  if (id) { try { return DriveApp.getFolderById(id); } catch (e) {} }
+  const f = DriveApp.createFolder(FOLDER_NAME);
+  props.setProperty('folderId', f.getId());
+  return f;
+}
+function toRow_(it) { return COLS.map(c => (it[c] === undefined || it[c] === null) ? '' : it[c]); }
+function findRow_(sh, id) {
+  const ids = sh.getRange(1, 1, sh.getLastRow(), 1).getDisplayValues();
+  for (let i = 1; i < ids.length; i++) if (ids[i][0] === String(id)) return i + 1;
+  return 0;
+}
+function run_(p) {
+  if (p.token !== TOKEN) return { ok: false, error: 'token' };
+  const lock = LockService.getScriptLock(); lock.waitLock(20000);
+  try {
+    const sh = sheet_();
+    if (p.action === 'list') {
+      const n = sh.getLastRow();
+      const v = n > 1 ? sh.getRange(2, 1, n - 1, COLS.length).getDisplayValues() : [];
+      const items = v.filter(r => r[0]).map(r => { const o = {}; COLS.forEach((c, i) => o[c] = r[i]); return o; });
+      return { ok: true, items: items, url: SpreadsheetApp.getActiveSpreadsheet().getUrl() };
+    }
+    if (p.action === 'add') { sh.appendRow(toRow_(p.item)); return { ok: true }; }
+    if (p.action === 'update') {
+      const r = findRow_(sh, p.item.id); if (!r) return { ok: false, error: 'notfound' };
+      sh.getRange(r, 1, 1, COLS.length).setValues([toRow_(p.item)]); return { ok: true };
+    }
+    if (p.action === 'delete') {
+      const r = findRow_(sh, p.id); if (!r) return { ok: false, error: 'notfound' };
+      sh.deleteRow(r); return { ok: true };
+    }
+    if (p.action === 'import') {
+      const rows = p.items.map(toRow_);
+      if (rows.length) sh.getRange(sh.getLastRow() + 1, 1, rows.length, COLS.length).setValues(rows);
+      return { ok: true };
+    }
+    if (p.action === 'upload') {
+      const blob = Utilities.newBlob(Utilities.base64Decode(p.data), p.type || 'application/octet-stream', p.name);
+      const f = folder_().createFile(blob);
+      return { ok: true, id: f.getId(), url: f.getUrl() };
+    }
+    if (p.action === 'trash') {
+      const fid = folder_().getId();
+      (p.ids || []).forEach(id => {
+        try {
+          const f = DriveApp.getFileById(id), ps = f.getParents();
+          if (ps.hasNext() && ps.next().getId() === fid) f.setTrashed(true);
+        } catch (e) {}
+      });
+      return { ok: true };
+    }
+    return { ok: false, error: 'action' };
+  } finally { lock.releaseLock(); }
+}</script>
+<script>
+(function(){
+var KEY="warranty-manager-v1",CATS=["家電","3C 電子","傢俱","交通工具","其他"];
+var db=null,cur=[],gone=[],vcur=null;
+function idb(){return new Promise(function(res,rej){if(db)return res(db);try{var r=indexedDB.open("warranty-files",1);r.onupgradeneeded=function(){r.result.createObjectStore("f")};r.onsuccess=function(){db=r.result;res(db)};r.onerror=function(){rej(r.error)}}catch(e){rej(e)}})}
+function tx(mode,fn){return idb().then(function(d){return new Promise(function(res,rej){var t=d.transaction("f",mode),rq=fn(t.objectStore("f"));t.oncomplete=function(){res(rq&&rq.result)};t.onerror=function(){rej(t.error)};t.onabort=function(){rej(t.error)}})})}
+function fput(id,b){return tx("readwrite",function(s){return s.put(b,id)}).catch(function(){alert("附件儲存失敗，可能是瀏覽器空間不足或無痕模式。")})}
+function fget(id){return tx("readonly",function(s){return s.get(id)})}
+function fdel(id){return tx("readwrite",function(s){return s["delete"](id)}).catch(function(){})}
+function dl(name,data){var u=URL.createObjectURL(data),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000);return Promise.resolve()}
+function shrink(f){return new Promise(function(res){if(!/^image\//.test(f.type)||f.type==="image/gif")return res(f);var u=URL.createObjectURL(f),im=new Image();im.onload=function(){var k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);c.toBlob(function(b){URL.revokeObjectURL(u);res(b&&b.size<f.size?b:f)},"image/jpeg",.82)};im.onerror=function(){URL.revokeObjectURL(u);res(f)};im.src=u})}
+function fsize(n){return n>1048576?(n/1048576).toFixed(1)+" MB":Math.max(1,Math.round(n/1024))+" KB"}
+function chips(){$("flist").innerHTML=cur.length?cur.map(function(f,i){return '<span class="chip"><em>'+esc(f.kind)+'</em>'+esc(f.name)+' ('+fsize(f.size)+')<button type="button" class="x" data-x="'+i+'" aria-label="移除">×</button></span>'}).join(""):'<span class="meta">尚未附加檔案</span>'}
+var items=[],filter="all",editId=null,$=function(i){return document.getElementById(i)};
+try{items=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){items=[]}
+var CK="warranty-gs-cfg",busy=false,sheetUrl="";
+function cfg(){try{return JSON.parse(localStorage.getItem(CK)||"{}")}catch(e){return{}}}
+function api(action,extra){var c=cfg();if(!c.url)return Promise.reject({code:"nocfg"});
+ return fetch(c.url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(Object.assign({action:action,token:c.token||""},extra||{}))})
+ .then(function(r){return r.json()},function(){throw{code:"net"}})
+ .then(function(j){if(!j||!j.ok)throw{code:(j&&j.error)||"bad"};return j},function(e){throw e&&e.code?e:{code:"bad"}})}
+function errMsg(e){var m={nocfg:"尚未設定連線，請按「連線設定」。",net:"無法連線到 Google Apps Script，請確認網址正確、已部署，且存取權為「任何人」。",token:"密碼不符，請在「連線設定」確認與 Apps Script 內的 TOKEN 一致。",notfound:"試算表中找不到這筆資料，請按「重新整理」。",bad:"Apps Script 回應格式不正確，請確認網址是以 /exec 結尾的網頁應用程式網址。"};return m[e&&e.code]||"發生錯誤："+((e&&e.code)||"未知")}
+function setSync(msg,bad){$("sync").innerHTML=(sheetUrl?'<a href="'+esc(sheetUrl)+'" target="_blank" rel="noopener">開啟 Google 試算表</a>':'')+'<button class="chip" id="rf">重新整理</button><button class="chip" id="cfg">連線設定</button><span class="'+(bad?'bad':'meta')+'">'+esc(msg||(cfg().url?"資料存放在你的 Google 試算表":"尚未連線，目前只顯示本機快取"))+'</span>'}
+function nd(s){var m=String(s||"").match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/);return m?m[1]+"-"+("0"+m[2]).slice(-2)+"-"+("0"+m[3]).slice(-2):""}
+function slim(r){var o={};["id","name","brand","cat","date","months","store","price","url","serial","phone","note"].forEach(function(c){o[c]=r[c]==null?"":r[c]});o.files=JSON.stringify((r.files||[]).map(function(f){return{id:f.id,kind:f.kind,name:f.name,type:f.type,size:f.size}}));return o}
+function sync(){if(busy||!cfg().url)return;busy=true;setSync("同步中…");return api("list").then(function(j){sheetUrl=j.url||"";var old={};items.forEach(function(x){old[x.id]=x.files||[]});items=(j.items||[]).filter(function(r){return r.name&&nd(r.date)&&+r.months>0}).map(function(r){r.date=nd(r.date);try{r.files=JSON.parse(r.files||"[]")}catch(e){r.files=[]}return r});persist();setSync("");render()}).catch(function(e){setSync(errMsg(e),true)}).then(function(){busy=false})}
+function saveRec(rec,isEdit){return api(isEdit?"update":"add",{item:slim(rec)}).then(function(){var i=-1;items.forEach(function(x,k){if(x.id===rec.id)i=k});if(i>-1)items[i]=rec;else items.push(rec);persist();render()})}
+function sheetDelete(id){return api("delete",{id:id})}
+function importRows(d){var have={};items.forEach(function(x){have[x.id]=1});var add=d.filter(function(x){return x&&x.name&&x.date&&+x.months>0&&x.id&&!have[x.id]});if(!add.length){alert("沒有需要匯入的新資料。");return}
+ api("import",{items:add.map(slim)}).then(function(){alert("已匯入 "+add.length+" 筆。");return sync()}).catch(function(e){alert(errMsg(e))})}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){}}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function parse(d){var p=d.split("-");return new Date(+p[0],+p[1]-1,+p[2])}
+function endOf(it){var d=parse(it.date),day=d.getDate();d.setMonth(d.getMonth()+(+it.months));if(d.getDate()!==day)d.setDate(0);return d}
+function fmt(d){return d.getFullYear()+"/"+(d.getMonth()+1)+"/"+d.getDate()}
+function info(it){var t=new Date();t.setHours(0,0,0,0);var e=endOf(it),s=parse(it.date);
+ var left=Math.round((e-t)/864e5),total=Math.max(1,Math.round((e-s)/864e5));
+ var st=left<0?"gone":left<=30?"soon":"ok";
+ return{end:e,left:left,st:st,pct:Math.max(0,Math.min(100,left/total*100))}}
+CATS.forEach(function(c){$("f-catg").add(new Option(c,c))});
+$("cat").add(new Option("全部分類",""));CATS.forEach(function(c){$("cat").add(new Option(c,c))});
+function render(){
+ var all=items.map(function(it){return{it:it,i:info(it)}});
+ var n={all:all.length,soon:0,gone:0};all.forEach(function(x){if(x.i.st==="soon")n.soon++;if(x.i.st==="gone")n.gone++});
+ $("stats").innerHTML=[["all","全部",n.all],["soon","30 天內到期",n.soon],["gone","已過期",n.gone]].map(function(s){
+  return '<button class="stat" data-f="'+s[0]+'" aria-pressed="'+(filter===s[0])+'"><b>'+s[2]+'</b><span>'+s[1]+'</span></button>'}).join("");
+ var q=$("q").value.trim().toLowerCase(),c=$("cat").value;
+ var rows=all.filter(function(x){
+  if(filter!=="all"&&x.i.st!==filter)return false;
+  if(c&&x.it.cat!==c)return false;
+  return !q||[x.it.name,x.it.brand,x.it.store].join(" ").toLowerCase().indexOf(q)>-1
+ }).sort(function(a,b){return a.i.left-b.i.left});
+ if(!rows.length){$("list").innerHTML='<div class="empty">'+(items.length?'沒有符合條件的產品。':'還沒有任何產品。<br>按下右下角「新增產品」，輸入購買日期與保固月數就會自動計算到期日。')+'</div>';return}
+ $("list").innerHTML=rows.map(function(x){var it=x.it,i=x.i;
+  var tag=i.st==="gone"?"已過期 "+(-i.left)+" 天":i.left===0?"今天到期":"剩 "+i.left+" 天";
+  var sub=[it.cat,it.brand,it.store,it.price?"NT$ "+Number(it.price).toLocaleString():""].filter(Boolean).map(esc).join("、");
+  var url=/^https?:\/\//i.test(it.url||"")?'<a href="'+esc(it.url)+'" target="_blank" rel="noopener">開啟說明書</a>':"";
+  return '<article class="item '+i.st+'"><div class="row"><div><h3 class="name">'+esc(it.name)+'</h3><p class="meta">'+sub+'</p></div><span class="tag">'+tag+'</span></div>'+
+  '<div class="bar"><i style="width:'+i.pct+'%"></i></div><p class="meta">購買 '+fmt(parse(it.date))+'，保固至 '+fmt(i.end)+'（'+it.months+' 個月）</p>'+
+  (it.serial||it.phone?'<p class="kv">'+(it.serial?'<span>序號：'+esc(it.serial)+'</span>':"")+(it.phone?'<span>客服：<a href="tel:'+esc(it.phone.replace(/[^\d+#*,]/g,""))+'">'+esc(it.phone)+'</a></span>':"")+'</p>':"")+
+  (it.note?'<p class="note">'+esc(it.note)+'</p>':"")+
+  (it.files&&it.files.length?'<div class="files">'+it.files.map(function(f){return '<button class="chip" data-v="'+esc(f.id)+'"><em>'+esc(f.kind)+'</em>'+esc(f.name)+'</button>'}).join("")+'</div>':"")+
+  '<div class="acts">'+url+'<button data-e="'+it.id+'">編輯</button></div></article>'}).join("")}
+function openForm(id){editId=id||null;var it=items.filter(function(x){return x.id===id})[0]||{};
+ $("dt").textContent=it.id?"編輯產品":"新增產品";
+ $("f-name").value=it.name||"";$("f-brand").value=it.brand||"";$("f-catg").value=it.cat||CATS[0];
+ $("f-date").value=it.date||new Date().toISOString().slice(0,10);$("f-mon").value=it.months||12;
+ $("f-store").value=it.store||"";$("f-price").value=it.price||"";$("f-url").value=it.url||"";$("f-note").value=it.note||"";
+ $("f-serial").value=it.serial||"";$("f-phone").value=it.phone||"";cur=(it.files||[]).map(function(f){return Object.assign({},f)});gone=[];chips();
+ $("err").textContent="";$("del").hidden=!it.id;$("dlg").showModal()}
+$("add").onclick=function(){openForm()};
+$("pick").onclick=function(){$("fpick").click()};
+$("fpick").onchange=function(){var fs=[].slice.call(this.files),kind=$("f-kind").value,inp=this;
+ Promise.all(fs.map(function(f){
+  if(!/^image\/|application\/pdf/.test(f.type)){$("err").textContent="只支援圖片與 PDF 檔。";return null}
+  if(f.size>10*1048576){$("err").textContent=f.name+" 超過 10 MB。";return null}
+  return shrink(f).then(function(b){var n=f.name;if(b!==f)n=n.replace(/\.\w+$/,"")+".jpg";cur.push({id:"f"+Date.now()+Math.random().toString(36).slice(2,7),kind:kind,name:n,type:b.type||f.type,size:b.size,blob:b})})
+ })).then(function(){inp.value="";chips()})};
+$("flist").onclick=function(e){var b=e.target.closest("[data-x]");if(!b)return;var f=cur.splice(+b.dataset.x,1)[0];if(!f.blob)gone.push(f.id);chips()};
+function openFile(id){window.open("https://drive.google.com/file/d/"+encodeURIComponent(id)+"/view","_blank","noopener")}
+$("vcl").onclick=function(){$("vw").close()};
+$("vdl").onclick=function(){if(vcur)dl(vcur.f.name,vcur.b)};
+$("cancel").onclick=function(){$("dlg").close()};
+$("save").onclick=function(){
+ var name=$("f-name").value.trim(),date=$("f-date").value,mon=+$("f-mon").value,url=$("f-url").value.trim();
+ if(!name){$("err").textContent="請輸入產品名稱。";return}
+ if(!date){$("err").textContent="請選擇購買日期。";return}
+ if(!(mon>0)){$("err").textContent="保固月數必須大於 0。";return}
+ if(url&&!/^https?:\/\//i.test(url)){$("err").textContent="說明書連結需以 http:// 或 https:// 開頭。";return}
+ var rec={id:editId||String(Date.now()),name:name,brand:$("f-brand").value.trim(),cat:$("f-catg").value,date:date,months:mon,store:$("f-store").value.trim(),price:$("f-price").value,url:url,serial:$("f-serial").value.trim(),phone:$("f-phone").value.trim(),note:$("f-note").value.trim(),files:cur.map(function(f){return{id:f.id,kind:f.kind,name:f.name,type:f.type,size:f.size}})};
+ var isEdit=!!editId;$("save").disabled=true;$("err").textContent="儲存中…";
+ $("err").textContent="上傳附件到 Google Drive…";
+ uploadCur().then(function(){rec.files=cur.map(function(f){return{id:f.id,kind:f.kind,name:f.name,type:f.type,size:f.size}});$("err").textContent="儲存中…";return saveRec(rec,isEdit)}).then(function(){if(gone.length)api("trash",{ids:gone}).catch(function(){});$("dlg").close()}).catch(function(e){$("err").textContent=errMsg(e)}).then(function(){$("save").disabled=false})};
+function toB64(b){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(String(r.result).split(",")[1])};r.onerror=rej;r.readAsDataURL(b)})}
+function uploadCur(){return cur.reduce(function(p,f){return p.then(function(){if(!f.blob)return;return toB64(f.blob).then(function(d){return api("upload",{name:f.name,type:f.type,kind:f.kind,data:d})}).then(function(j){f.id=j.id;delete f.blob})})},Promise.resolve())}
+$("del").onclick=function(){if(confirm("確定刪除這項產品？")){var did=editId,gf=(items.filter(function(x){return x.id===did})[0]||{}).files||[];$("err").textContent="刪除中…";sheetDelete(did).then(function(){if(gf.length)api("trash",{ids:gf.map(function(f){return f.id})}).catch(function(){});items=items.filter(function(x){return x.id!==did});persist();$("dlg").close();render()}).catch(function(e){$("err").textContent=errMsg(e)})}};
+$("stats").onclick=function(e){var b=e.target.closest("[data-f]");if(b){filter=b.dataset.f;render()}};
+$("list").onclick=function(e){var v=e.target.closest("[data-v]");if(v)return openFile(v.dataset.v);var b=e.target.closest("[data-e]");if(b)openForm(b.dataset.e)};
+$("q").oninput=render;$("cat").onchange=render;
+$("exp").onclick=function(){dl("warranty-backup.json",new Blob([JSON.stringify(items.map(function(x){return x}),null,1)],{type:"application/json"}))};
+$("imp").onclick=function(){$("file").click()};
+$("file").onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(!Array.isArray(d))throw 0;importRows(d)}catch(e){alert("備份檔格式不正確。")}};r.readAsText(f)};
+setSync("");$("gs").value=document.getElementById("gs-src").textContent.trim();
+function openCfg(){var c=cfg();$("c-url").value=c.url||"";$("c-tok").value=c.token||"";$("cerr").textContent="";$("cd").showModal()}
+$("sync").onclick=function(e){if(e.target.id==="rf")sync();if(e.target.id==="cfg")openCfg()};
+$("ccl").onclick=function(){$("cd").close()};
+$("gcopy").onclick=function(){var t=$("gs");t.select();try{navigator.clipboard.writeText(t.value)}catch(e){document.execCommand("copy")}$("gcopy").textContent="已複製"};
+$("csv").onclick=function(){var u=$("c-url").value.trim();if(!/^https:\/\/script\.google\.com\/.+\/exec/.test(u)){$("cerr").textContent="請貼上以 /exec 結尾的網頁應用程式網址。";return}
+ try{localStorage.setItem(CK,JSON.stringify({url:u,token:$("c-tok").value}))}catch(e){}
+ $("cd").close();sync()};
+render();if(cfg().url)sync();else openCfg()})();
+</script>
+</body>
+</html>
